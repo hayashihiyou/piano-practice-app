@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Piano Practice Studio</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Practice Manager + Live Coach</p>
+          <h1>Piano Practice Studio</h1>
+          <p class="hero-copy">
+            今日の練習時間を記録しながら、楽譜ファイルとその場で録音した演奏を見比べて、
+            音の高さや速さが大きくずれていないかをリアルタイムで確認できる練習サポートツールです。
+          </p>
+        </div>
+        <div class="hero-card">
+          <p class="hero-card-label">今日の合計</p>
+          <strong id="today-total">0.0時間</strong>
+          <span id="today-date"></span>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="panel practice-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">1. 練習タイマー</p>
+              <h2>今日の練習を開始/停止で記録</h2>
+            </div>
+            <button id="reset-data" class="ghost-button" type="button">
+              ローカルデータを初期化
+            </button>
+          </div>
+
+          <article class="timer-card">
+            <div class="timer-heading">
+              <span id="practice-status" class="status-pill idle">待機中</span>
+              <span class="timer-note">過去日はあとから変更できません</span>
+            </div>
+            <strong id="practice-live-timer" class="timer-display">00:00:00</strong>
+            <p id="practice-session-message" class="coach-message">
+              練習を始めるときに開始、終わったら停止を押してください。日付が変わると自動で停止します。
+            </p>
+            <div class="timer-actions">
+              <button id="start-practice" class="primary-button" type="button">練習開始</button>
+              <button id="stop-practice" class="ghost-button" type="button" disabled>練習停止</button>
+            </div>
+          </article>
+
+          <div class="practice-grid">
+            <article class="stat-card">
+              <span>今週</span>
+              <strong id="week-total">0.0時間</strong>
+            </article>
+            <article class="stat-card">
+              <span>平均 / 日</span>
+              <strong id="average-total">0.0時間</strong>
+            </article>
+            <article class="stat-card">
+              <span>連続日数</span>
+              <strong id="streak-total">0日</strong>
+            </article>
+          </div>
+
+          <article class="chart-card">
+            <div class="chart-heading">
+              <div>
+                <h3 id="chart-title">日ごとの練習</h3>
+                <span id="chart-caption">直近14日間の練習時間を表示しています</span>
+              </div>
+              <div class="chart-mode-switch" role="group" aria-label="グラフの表示単位">
+                <button id="chart-mode-day" class="mode-button active" type="button">日</button>
+                <button id="chart-mode-week" class="mode-button" type="button">週</button>
+                <button id="chart-mode-month" class="mode-button" type="button">月</button>
+              </div>
+            </div>
+            <div id="practice-chart" class="practice-chart"></div>
+          </article>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>日付</th>
+                  <th>時間</th>
+                  <th>状態</th>
+                </tr>
+              </thead>
+              <tbody id="practice-table-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel score-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">2. 楽譜と録音チェック</p>
+              <h2>楽譜とその場の録音を見比べる</h2>
+            </div>
+            <span id="run-indicator" class="run-indicator hidden">実行中です</span>
+          </div>
+
+          <div class="score-controls">
+            <label class="file-picker">
+              楽譜ファイルを選ぶ
+              <input id="score-file" type="file" accept=".musicxml,.xml" />
+            </label>
+            <button id="load-sample-score" class="secondary-button" type="button">
+              見本の楽譜を開く
+            </button>
+          </div>
+
+          <div class="score-summary">
+            <article class="summary-card">
+              <span>楽譜</span>
+              <strong id="score-name">未読込</strong>
+            </article>
+            <article class="summary-card">
+              <span>お手本の速さ</span>
+              <strong id="score-tempo">-</strong>
+            </article>
+            <article class="summary-card">
+              <span>見る音の数</span>
+              <strong id="score-events">0</strong>
+            </article>
+            <article class="summary-card">
+              <span>録音状態</span>
+              <strong id="audio-status">未準備</strong>
+            </article>
+          </div>
+
+          <div class="coach-layout">
+            <article class="coach-card coach-status">
+              <div class="coach-card-heading">
+                <h3>録音しながらチェック</h3>
+                <div class="coach-actions">
+                  <button id="start-session" class="primary-button" type="button">録音開始</button>
+                  <button id="stop-session" class="ghost-button" type="button" disabled>録音停止</button>
+                </div>
+              </div>
+
+              <div class="status-pill-row">
+                <span id="session-state" class="status-pill idle">待機中</span>
+                <span id="tempo-state" class="status-pill neutral">速さ未判定</span>
+                <span id="symbol-state" class="status-pill neutral">音量未判定</span>
+              </div>
+
+              <div class="score-grid">
+                <div>
+                  <span>音の一致率</span>
+                  <strong id="accuracy-rate">0%</strong>
+                </div>
+                <div>
+                  <span>速さの安定度</span>
+                  <strong id="tempo-consistency">0%</strong>
+                </div>
+                <div>
+                  <span>音量の目安</span>
+                  <strong id="symbol-accuracy">0%</strong>
+                </div>
+                <div>
+                  <span>現在の小節</span>
+                  <strong id="current-measure">-</strong>
+                </div>
+              </div>
+
+              <p id="coach-message" class="coach-message">
+                楽譜ファイルを読み込み、録音開始を押してから演奏してください。
+              </p>
+            </article>
+
+            <article class="coach-card">
+              <h3>楽譜のポイント</h3>
+              <ul id="score-expectations" class="expectation-list"></ul>
+            </article>
+          </div>
+
+          <div class="feedback-layout">
+            <article class="coach-card">
+              <h3>演奏の記録</h3>
+              <ul id="performance-log" class="event-list"></ul>
+            </article>
+            <article class="coach-card">
+              <h3>改善ヒント</h3>
+              <ul id="feedback-list" class="feedback-list"></ul>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="empty-row-template">
+      <tr>
+        <td colspan="3" class="empty-state">まだ記録がありません。</td>
+      </tr>
+    </template>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
