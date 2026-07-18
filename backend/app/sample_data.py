@@ -65,6 +65,7 @@ def build_seed_data() -> dict[str, object]:
       stats=PieceStats(
         todayMinutes=24,
         weekMinutes=92,
+        monthMinutes=146,
         totalMinutes=146,
         lastPracticedAt="2026-03-22T08:20:00.000Z",
       ),
@@ -82,6 +83,7 @@ def build_seed_data() -> dict[str, object]:
       stats=PieceStats(
         todayMinutes=18,
         weekMinutes=76,
+        monthMinutes=210,
         totalMinutes=210,
         lastPracticedAt="2026-03-22T06:40:00.000Z",
       ),
@@ -97,8 +99,9 @@ def build_seed_data() -> dict[str, object]:
       analysisReady=False,
       createdAt=created_bach,
       stats=PieceStats(
-        todayMinutes=12,
+        todayMinutes=0,
         weekMinutes=40,
+        monthMinutes=58,
         totalMinutes=58,
         lastPracticedAt="2026-03-21T22:10:00.000Z",
       ),
@@ -144,7 +147,7 @@ def build_seed_data() -> dict[str, object]:
       endedAt=datetime.fromisoformat("2026-03-22T08:14:00"),
       durationSec=24 * 60,
       memo="Repeated hands-separate warmup.",
-      source="analysis",
+      source="timer",
       analysisResultId="analysis-1",
     ),
     PracticeSession(

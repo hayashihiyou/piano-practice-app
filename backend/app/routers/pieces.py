@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 from uuid import uuid4
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
@@ -22,7 +22,7 @@ def create_piece(payload: PieceCreateRequest) -> Piece:
     memo=payload.memo,
     scoreSourceType="musicxml",
     analysisReady=False,
-    createdAt=datetime.utcnow(),
+    createdAt=datetime.now(UTC),
     stats=PieceStats(),
   )
   repository.save_piece(piece)
@@ -70,4 +70,3 @@ def apply_score_corrections(score_id: str, payload: ScoreCorrectionRequest) -> P
   if detail is None:
     raise HTTPException(status_code=500, detail="Failed to rebuild piece detail")
   return detail
-

@@ -1,27 +1,31 @@
 import { AnalysisResult } from "../lib/types";
+import { formatMeasureLabel, formatStatus, getDictionary, Locale } from "../lib/i18n";
 
 type AnalysisSummaryProps = {
   analysis: AnalysisResult;
+  locale: Locale;
 };
 
-export function AnalysisSummary({ analysis }: AnalysisSummaryProps) {
+export function AnalysisSummary({ analysis, locale }: AnalysisSummaryProps) {
+  const dict = getDictionary(locale);
+
   return (
     <section className="analysis-layout">
       <div className="stat-grid">
         <article className="stat-card emphasis">
-          <span>Overall</span>
+          <span>{dict.analysis.overall}</span>
           <strong>{analysis.overallScore}</strong>
         </article>
         <article className="stat-card">
-          <span>Pitch</span>
+          <span>{dict.analysis.pitch}</span>
           <strong>{analysis.pitchAccuracy}%</strong>
         </article>
         <article className="stat-card">
-          <span>Tempo</span>
+          <span>{dict.analysis.tempo}</span>
           <strong>{analysis.tempoConsistency}%</strong>
         </article>
         <article className="stat-card">
-          <span>Alignment</span>
+          <span>{dict.analysis.alignment}</span>
           <strong>{Math.round(analysis.alignmentConfidence * 100)}%</strong>
         </article>
       </div>
@@ -29,10 +33,10 @@ export function AnalysisSummary({ analysis }: AnalysisSummaryProps) {
       <section className="panel">
         <div className="panel-heading">
           <div>
-            <p className="section-kicker">Summary</p>
-            <h2>Performance result</h2>
+            <p className="section-kicker">{dict.analysis.summaryKicker}</p>
+            <h2>{dict.analysis.performanceResult}</h2>
           </div>
-          <span className="pill">{analysis.status}</span>
+          <span className="pill">{formatStatus(analysis.status, locale)}</span>
         </div>
         <p className="support-copy">{analysis.summary}</p>
       </section>
@@ -40,14 +44,14 @@ export function AnalysisSummary({ analysis }: AnalysisSummaryProps) {
       <section className="panel">
         <div className="panel-heading">
           <div>
-            <p className="section-kicker">Measures</p>
-            <h2>Measure findings</h2>
+            <p className="section-kicker">{dict.analysis.measuresKicker}</p>
+            <h2>{dict.analysis.measureFindings}</h2>
           </div>
         </div>
         <div className="finding-list">
           {analysis.measureFindings.map((finding) => (
             <article key={`${finding.measure}-${finding.title}`} className={`finding-card ${finding.severity}`}>
-              <span className="finding-meta">Measure {finding.measure}</span>
+              <span className="finding-meta">{formatMeasureLabel(finding.measure, locale)}</span>
               <strong>{finding.title}</strong>
               <p>{finding.detail}</p>
             </article>
@@ -58,24 +62,24 @@ export function AnalysisSummary({ analysis }: AnalysisSummaryProps) {
       <section className="panel">
         <div className="panel-heading">
           <div>
-            <p className="section-kicker">Notes</p>
-            <h2>Detailed note mismatches</h2>
+            <p className="section-kicker">{dict.analysis.notesKicker}</p>
+            <h2>{dict.analysis.detailedMismatches}</h2>
           </div>
         </div>
         <div className="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Measure</th>
-                <th>Expected</th>
-                <th>Actual</th>
-                <th>Issue</th>
+                <th>{dict.analysis.measure}</th>
+                <th>{dict.analysis.expected}</th>
+                <th>{dict.analysis.actual}</th>
+                <th>{dict.analysis.issue}</th>
               </tr>
             </thead>
             <tbody>
               {analysis.noteFindings.map((finding) => (
                 <tr key={finding.noteId}>
-                  <td>{finding.measure}</td>
+                  <td>{formatMeasureLabel(finding.measure, locale)}</td>
                   <td>{finding.expected}</td>
                   <td>{finding.actual}</td>
                   <td>{finding.issue}</td>
@@ -88,4 +92,3 @@ export function AnalysisSummary({ analysis }: AnalysisSummaryProps) {
     </section>
   );
 }
-

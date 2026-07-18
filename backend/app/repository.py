@@ -181,8 +181,10 @@ class InMemoryRepository:
 
     reference_day = self._reference_day()
     week_start = reference_day - timedelta(days=6)
+    month_start = reference_day - timedelta(days=29)
     today_minutes = 0
     week_minutes = 0
+    month_minutes = 0
     total_minutes = 0
 
     for session in sessions:
@@ -193,10 +195,13 @@ class InMemoryRepository:
         today_minutes += minutes
       if week_start <= session_day <= reference_day:
         week_minutes += minutes
+      if month_start <= session_day <= reference_day:
+        month_minutes += minutes
 
     return PieceStats(
       todayMinutes=today_minutes,
       weekMinutes=week_minutes,
+      monthMinutes=month_minutes,
       totalMinutes=total_minutes,
       lastPracticedAt=max(session.startedAt for session in sessions).isoformat(),
     )

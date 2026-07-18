@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Literal
 
 from pydantic import BaseModel, Field
@@ -10,6 +10,10 @@ ScoreSourceType = Literal["musicxml", "pdf", "image"]
 SessionSource = Literal["timer", "analysis", "manual"]
 IngestionStatus = Literal["ready", "processing", "needs_review"]
 AnalysisStatus = Literal["completed", "processing", "failed"]
+
+
+def utc_now() -> datetime:
+  return datetime.now(UTC)
 
 
 class TempoChange(BaseModel):
@@ -53,12 +57,13 @@ class ScoreIngestionJob(BaseModel):
   overallConfidence: float
   lowConfidenceMeasures: list[int] = Field(default_factory=list)
   previewUrl: str | None = None
-  createdAt: datetime = Field(default_factory=datetime.utcnow)
+  createdAt: datetime = Field(default_factory=utc_now)
 
 
 class PieceStats(BaseModel):
   todayMinutes: int = 0
   weekMinutes: int = 0
+  monthMinutes: int = 0
   totalMinutes: int = 0
   lastPracticedAt: str = ""
 
@@ -72,7 +77,7 @@ class Piece(BaseModel):
   canonicalScoreId: str | None = None
   scoreSourceType: ScoreSourceType
   analysisReady: bool = False
-  createdAt: datetime = Field(default_factory=datetime.utcnow)
+  createdAt: datetime = Field(default_factory=utc_now)
   stats: PieceStats = Field(default_factory=PieceStats)
 
 
@@ -116,7 +121,7 @@ class AnalysisResult(BaseModel):
   summary: str
   measureFindings: list[MeasureFinding] = Field(default_factory=list)
   noteFindings: list[NoteFinding] = Field(default_factory=list)
-  createdAt: datetime = Field(default_factory=datetime.utcnow)
+  createdAt: datetime = Field(default_factory=utc_now)
 
 
 class AnalysisJob(BaseModel):
@@ -126,7 +131,7 @@ class AnalysisJob(BaseModel):
   audioFileId: str
   status: AnalysisStatus
   resultId: str | None = None
-  createdAt: datetime = Field(default_factory=datetime.utcnow)
+  createdAt: datetime = Field(default_factory=utc_now)
 
 
 class DashboardChartItem(BaseModel):
@@ -191,4 +196,3 @@ class ScoreCorrectionRequest(BaseModel):
 class AnalysisJobCreateResponse(BaseModel):
   job: AnalysisJob
   result: AnalysisResult
-

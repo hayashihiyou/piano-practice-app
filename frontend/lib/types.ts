@@ -49,6 +49,7 @@ export type ScoreIngestionJob = {
 export type PieceStats = {
   todayMinutes: number;
   weekMinutes: number;
+  monthMinutes: number;
   totalMinutes: number;
   lastPracticedAt: string;
 };

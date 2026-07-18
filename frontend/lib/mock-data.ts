@@ -8,6 +8,7 @@ import {
   PracticeSession,
   ScoreIngestionJob,
 } from "./types";
+import type { Locale } from "./i18n";
 
 const score: CanonicalScore = {
   id: "score-twinkle",
@@ -71,6 +72,7 @@ const pieces: Piece[] = [
     stats: {
       todayMinutes: 24,
       weekMinutes: 92,
+      monthMinutes: 146,
       totalMinutes: 146,
       lastPracticedAt: "2026-03-22T08:20:00.000Z",
     },
@@ -88,6 +90,7 @@ const pieces: Piece[] = [
     stats: {
       todayMinutes: 18,
       weekMinutes: 76,
+      monthMinutes: 210,
       totalMinutes: 210,
       lastPracticedAt: "2026-03-22T06:40:00.000Z",
     },
@@ -103,8 +106,9 @@ const pieces: Piece[] = [
     analysisReady: false,
     createdAt: "2026-03-18T10:30:00.000Z",
     stats: {
-      todayMinutes: 12,
+      todayMinutes: 0,
       weekMinutes: 40,
+      monthMinutes: 58,
       totalMinutes: 58,
       lastPracticedAt: "2026-03-21T22:10:00.000Z",
     },
@@ -120,7 +124,7 @@ const recentSessions: PracticeSession[] = [
     endedAt: "2026-03-22T08:14:00.000Z",
     durationSec: 24 * 60,
     memo: "Repeated hands-separate warmup.",
-    source: "analysis",
+    source: "timer",
     analysisResultId: "analysis-1",
   },
   {
@@ -167,6 +171,35 @@ const latestAnalysis: AnalysisResult = {
   ],
 };
 
+const latestAnalysisJa: AnalysisResult = {
+  ...latestAnalysis,
+  summary: "全体として音程は安定していました。2小節目がやや前のめりで、最後の音は少し早く離れていました。",
+  measureFindings: [
+    {
+      measure: 1,
+      title: "安定した出だし",
+      detail: "C と G の入りは、想定したタイミングの範囲に収まりました。",
+      severity: "good",
+    },
+    {
+      measure: 2,
+      title: "少し走り気味",
+      detail: "2つの A は、テンポマップより約 90ms 早く入りました。",
+      severity: "warn",
+    },
+    {
+      measure: 4,
+      title: "最後の保持が短い",
+      detail: "最後の C が、目標の長さより早く切れていました。",
+      severity: "bad",
+    },
+  ],
+  noteFindings: [
+    { noteId: "m2-1", measure: 2, expected: "A4", actual: "A4", issue: "早く入りました" },
+    { noteId: "m4-3", measure: 4, expected: "C4", actual: "C4", issue: "早く離しました" },
+  ],
+};
+
 const ingestionJob: ScoreIngestionJob = {
   id: "job-twinkle",
   pieceId: "piece-twinkle",
@@ -179,7 +212,7 @@ const ingestionJob: ScoreIngestionJob = {
 
 export async function getMockDashboardData(): Promise<DashboardData> {
   return {
-    todayMinutes: 54,
+    todayMinutes: 42,
     weekMinutes: 208,
     monthMinutes: 414,
     pieces,
@@ -237,18 +270,20 @@ export async function getMockDashboardData(): Promise<DashboardData> {
   };
 }
 
-export async function getMockPieceDetail(id: string): Promise<PieceDetail | null> {
+export async function getMockPieceDetail(id: string, locale: Locale = "en"): Promise<PieceDetail | null> {
   const piece = pieces.find((entry) => entry.id === id);
   if (!piece) {
     return null;
   }
+
+  const localizedLatestAnalysis = locale === "ja" ? latestAnalysisJa : latestAnalysis;
 
   return {
     piece,
     score,
     ingestionJob,
     recentSessions: recentSessions.filter((session) => session.pieceId === id),
-    latestAnalysis: id === "piece-twinkle" ? latestAnalysis : undefined,
+    latestAnalysis: id === "piece-twinkle" ? localizedLatestAnalysis : undefined,
   };
 }
 
@@ -266,6 +301,10 @@ export async function getMockPracticeScreenData(id: string): Promise<PracticeScr
   };
 }
 
-export async function getMockAnalysisResult(id: string): Promise<AnalysisResult | null> {
-  return id === latestAnalysis.id ? latestAnalysis : null;
+export async function getMockAnalysisResult(id: string, locale: Locale = "en"): Promise<AnalysisResult | null> {
+  if (id !== latestAnalysis.id) {
+    return null;
+  }
+
+  return locale === "ja" ? latestAnalysisJa : latestAnalysis;
 }

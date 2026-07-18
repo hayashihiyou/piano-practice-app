@@ -4,6 +4,7 @@ import {
   PieceDetail,
   PracticeScreenData,
 } from "./types";
+import type { Locale } from "./i18n";
 import {
   getMockAnalysisResult,
   getMockDashboardData,
@@ -41,9 +42,9 @@ export async function getDashboardData(): Promise<DashboardData> {
   return response ?? getMockDashboardData();
 }
 
-export async function getPieceDetail(id: string): Promise<PieceDetail | null> {
+export async function getPieceDetail(id: string, locale: Locale = "en"): Promise<PieceDetail | null> {
   const response = await fetchFromApi<PieceDetail>(`/pieces/${id}`);
-  return response ?? getMockPieceDetail(id);
+  return response ?? getMockPieceDetail(id, locale);
 }
 
 export async function getPracticeScreenData(id: string): Promise<PracticeScreenData | null> {
@@ -51,7 +52,7 @@ export async function getPracticeScreenData(id: string): Promise<PracticeScreenD
   return response ?? getMockPracticeScreenData(id);
 }
 
-export async function getAnalysisResult(id: string): Promise<AnalysisResult | null> {
+export async function getAnalysisResult(id: string, locale: Locale = "en"): Promise<AnalysisResult | null> {
   const response = await fetchFromApi<AnalysisResult>(`/analysis-results/${id}`);
-  return response ?? getMockAnalysisResult(id);
+  return response ?? getMockAnalysisResult(id, locale);
 }

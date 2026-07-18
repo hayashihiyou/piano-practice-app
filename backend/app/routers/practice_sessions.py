@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 from uuid import uuid4
 
 from fastapi import APIRouter, HTTPException
@@ -30,7 +30,7 @@ def start_practice_session(payload: PracticeSessionStartRequest) -> PracticeSess
     id=f"session-{uuid4().hex[:8]}",
     pieceId=piece.id,
     pieceTitle=piece.title,
-    startedAt=payload.startedAt or datetime.utcnow(),
+    startedAt=payload.startedAt or datetime.now(UTC),
     memo=payload.memo,
     source=payload.source,
   )
@@ -44,7 +44,7 @@ def stop_practice_session(session_id: str, payload: PracticeSessionStopRequest) 
   if session is None:
     raise HTTPException(status_code=404, detail="Practice session not found")
 
-  ended_at = payload.endedAt or datetime.utcnow()
+  ended_at = payload.endedAt or datetime.now(UTC)
   duration = max(0, int((ended_at - session.startedAt).total_seconds()))
   updated = session.model_copy(
     update={
@@ -56,4 +56,3 @@ def stop_practice_session(session_id: str, payload: PracticeSessionStopRequest) 
   )
   repository.save_session(updated)
   return updated
-

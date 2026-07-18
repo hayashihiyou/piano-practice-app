@@ -51,6 +51,11 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
 .app-shell {
   width: min(1180px, calc(100vw - 24px));
   margin: 0 auto;
@@ -106,6 +111,67 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.header-actions {
+  display: grid;
+  gap: 12px;
+  justify-items: end;
+}
+
+.locale-switcher {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  gap: 4px;
+}
+
+.range-switcher-wrap {
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+}
+
+.range-label {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.segmented-control {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 999px;
+  gap: 4px;
+  background: rgba(29, 26, 22, 0.06);
+}
+
+.segmented-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.segmented-button.active {
+  background: white;
+  color: var(--text);
+  box-shadow: 0 4px 16px rgba(29, 26, 22, 0.08);
+}
+
+.locale-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: white;
+  background: transparent;
+}
+
+.locale-button.active {
+  background: rgba(255, 255, 255, 0.24);
 }
 
 .top-nav a,
@@ -263,35 +329,85 @@ th {
   color: var(--warn);
 }
 
-.chart-grid {
+.pie-layout {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 12px;
-  align-items: end;
+  gap: 20px;
+  align-items: center;
   margin-top: 20px;
 }
 
-.chart-column {
+.chart-grid {
   display: grid;
-  gap: 8px;
-  justify-items: center;
+  gap: 18px;
+  margin-top: 18px;
 }
 
-.chart-stack {
-  width: 100%;
-  min-height: 190px;
-  border-radius: 20px;
-  padding: 10px;
+.chart-card {
+  padding: 16px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(243, 239, 231, 0.78));
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 8px;
-  justify-content: flex-start;
+  background: var(--panel-strong);
 }
 
-.chart-stack span {
-  display: block;
+.chart-card h3 {
+  margin: 0;
+  font-family: var(--font-display);
+}
+
+.pie-figure-wrap {
+  display: grid;
+  place-items: center;
+}
+
+.pie-figure {
+  width: min(280px, 72vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 0 0 1px rgba(29, 26, 22, 0.08);
+}
+
+.pie-hole {
+  width: 54%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 253, 248, 0.96);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 14px;
+}
+
+.pie-hole span {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.pie-hole strong {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+}
+
+.pie-legend {
+  display: grid;
+  gap: 12px;
+}
+
+.legend-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.legend-swatch {
+  width: 12px;
+  height: 12px;
   border-radius: 999px;
 }
 
@@ -325,6 +441,16 @@ th {
   margin-top: 18px;
 }
 
+.piece-summary {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.piece-summary strong {
+  display: block;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -343,6 +469,20 @@ td {
   margin-top: 18px;
   overflow-x: auto;
   padding-bottom: 4px;
+}
+
+.score-guide {
+  display: grid;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: rgba(21, 127, 111, 0.06);
+  border: 1px solid rgba(21, 127, 111, 0.12);
+}
+
+.score-guide p {
+  margin: 0;
 }
 
 .measure-card {
@@ -461,8 +601,29 @@ td {
   width: 100%;
 }
 
+.guide-list {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  background: rgba(21, 127, 111, 0.06);
+  border: 1px solid rgba(21, 127, 111, 0.12);
+}
+
+.instruction-list {
+  margin: 10px 0 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 8px;
+  color: var(--text);
+}
+
 .inline-error {
   color: var(--bad);
+  font-weight: 700;
+}
+
+.inline-success {
+  color: var(--good);
   font-weight: 700;
 }
 
@@ -476,6 +637,11 @@ td {
   display: grid;
   gap: 8px;
   color: var(--muted);
+}
+
+.field-help {
+  font-size: 0.84rem;
+  line-height: 1.5;
 }
 
 .form-grid input,
@@ -519,6 +685,14 @@ td {
   }
 
   .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pie-layout {
+    grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+  }
+
+  .chart-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
