@@ -1,49 +1,41 @@
-# Mobile Piano Practice Coach
+# piano-practice-app
 
-This repository now contains a staged rebuild of the original static prototype into a mobile-first architecture:
+This repository contains a mobile-oriented piano practice application that tracks daily practice time, compares performances against score data, and is evolving toward social sharing and feedback features.
 
-- `frontend/`: Next.js + TypeScript UI for dashboard, piece detail, practice capture, and analysis review
-- `backend/`: FastAPI API for pieces, score ingestion, practice sessions, and post-take analysis
-- `samples/`: bundled sample score data used by the parser and seed fixtures
-- root `index.html`, `app.js`, `styles.css`: legacy prototype kept as reference
+## Current structure
+
+- `frontend/`: Next.js + TypeScript UI
+- `backend/`: FastAPI API
+- `samples/`: bundled sample score data
+- root `index.html`, `app.js`, `styles.css`: earlier prototype kept for reference
 
 ## What is implemented
 
 ### Frontend
 
-- Mobile-first dashboard with per-piece color-coded weekly time bars
-- Piece detail screen with ingestion status and score review state
-- Practice screen with session timer, microphone recording, and audio upload UI
-- Analysis result screen with measure-level and note-level findings
-- Mock API fallback so the UI can render before the backend is connected
+- Mobile-first dashboard with piece summaries and practice views
+- Piece detail and new piece creation screens
+- Practice screen with timer and recording-oriented workflow
+- Analysis result screens and summary components
+- Mock API fallback for local UI development
 
 ### Backend
 
-- `MusicXML` parsing into a canonical score model with tempo map, measures, notes, and default solfege labels
-- Score upload API for `MusicXML`, `PDF`, and image files
-- Mock OMR path for `PDF` and images that marks low-confidence measures and blocks strict analysis
-- Practice session start/stop APIs
-- Analysis job API with a deterministic mock analysis engine
-- Score correction API that unblocks strict analysis once low-confidence measures are confirmed
+- `MusicXML` parsing into a score model
+- Piece and score ingestion APIs
+- Practice session APIs
+- Analysis job APIs with deterministic mock analysis behavior
+- Score correction flow for low-confidence score data
 
-## Current development mode
+## Development notes
 
-This workspace does not currently expose `node`, `npm`, or `python` on the shell path, so the code was implemented but not executed here.
+The current codebase is structured so the UI and API can later be extended into a full mobile app with:
 
-The backend is intentionally wired in a development-friendly way:
-
-- uploads are stored in `backend/local_storage/`
-- OMR uses a mock extractor seeded from `samples/twinkle.musicxml`
-- audio analysis uses a deterministic mock engine
-- analysis jobs execute inline instead of a real worker queue
-
-That keeps the API and UI shape ready for later replacement with:
-
-- Postgres-backed repositories
-- object storage
-- real OMR
-- real polyphonic piano transcription
-- async worker processing
+- user profiles
+- follow / follower relationships
+- shared practice history
+- messaging
+- recording sharing and feedback
 
 ## Frontend setup
 
@@ -85,7 +77,7 @@ API routes are served under `/api`.
 
 ## Tests
 
-Backend unit tests were added for:
+Backend unit tests cover:
 
 - `MusicXML` parsing
 - score ingestion review gating
@@ -100,7 +92,9 @@ pytest
 
 ## Next upgrades
 
-- Replace the mock OMR extractor with a real score-recognition pipeline
-- Replace the mock analysis service with polyphonic piano transcription + alignment
-- Swap the in-memory repository for Postgres
-- Move inline analysis execution to a queue worker
+- Replace mock score recognition and analysis with production implementations
+- Add authentication and user profiles
+- Add follow / follower graphs
+- Add direct messaging
+- Add recording sharing and structured feedback
+- Move persistence to a real database
